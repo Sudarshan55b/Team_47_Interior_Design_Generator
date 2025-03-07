@@ -9,7 +9,6 @@ Users can input details such as room type, style, color scheme, and furniture pr
 - **AI-Powered Recommendations**: Uses an AI model to generate personalized interior design suggestions.
 - **FastAPI Backend**: Implements FastAPI for handling API requests.
 - **Asynchronous API Calls**: Uses `httpx` for efficient AI model communication.
-- **Responsive Design**: Mobile-friendly UI with dynamic styling.
 - **Copy to Clipboard**: Allows users to copy generated recommendations.
 
 ## Technologies Used
