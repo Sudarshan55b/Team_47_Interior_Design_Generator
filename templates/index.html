@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interior Design Generator</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', path='/logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+    <style>
+         body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e0c2ff, #a8d5ff); /* Dynamic gradient background */
+            background-size: 200% 200%;
+            animation: gradientAnimation 15s ease infinite;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            width: 85%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white container */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px); /* Apply blur to the background */
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: #383838;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .form-container {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 24px);
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 17px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .results-container {
+            margin-top: 40px;
+            border-top: 2px solid #eee;
+            padding-top: 30px;
+        }
+
+        .results-container h2 {
+            color: #383838;
+            margin-bottom: 25px;
+        }
+
+        #loading {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3); /* Lighter base color */
+    border-left-color: #007bff; /* Primary color for the active part */
+    border-radius: 50%;
+    width: 40px; /* Slightly larger for better visibility */
+    height: 40px;
+    animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite; /* Smoother animation */
+    margin: 0 auto 15px;
+    box-sizing: border-box; /* Important for consistent sizing */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+        #results {
+            line-height: 1.7;
+            font-size: 1.05em;
+        }
+
+        #results h3 {
+            color: #007bff;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .list-number {
+            margin-right: 12px;
+            font-weight: 600;
+        }
+
+        .error {
+            color: #d32f2f;
+            margin-top: 15px;
+        }
+
+        #copyBtn {
+            margin-top: 30px;
+            background-color: #28a745;
+        }
+
+        #copyBtn:hover {
+            background-color: #218838;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px; /* Add some space above the logos */
+        }
+
+        .logo {
+            width: 80px; /* Adjust size as needed */
+            height: auto;
+            margin: 0 15px; /* Space between logos */
+            opacity: 0.8; /* Slightly transparent */
+            transition: opacity 0.3s ease;
+        }
+
+        .logo:hover {
+            opacity: 1; /* Fully opaque on hover */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <img src="{{ url_for('static', path='/IVIS_logo.png') }}" alt="Logo 1" class="logo">
+                <img src="{{ url_for('static', path='/NIE_University.png') }}" alt="Logo 2" class="logo">
+                <img src="{{ url_for('static', path='/PULSE LOGO.png') }}" alt="Logo 3" class="logo">
+            </div>
+            <h1>Interior Design Generator</h1>
+            <p>Craft your dream spaces with ease.</p>
+        </header>
+
+        <div class="form-container">
+            <form id="designForm">
+                <div class="form-group">
+                    <label for="room_type">Room Type:</label>
+                    <input type="text" id="room_type" name="room_type" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="style">Style:</label>
+                    <input type="text" id="style" name="style" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="color_scheme">Color Scheme:</label>
+                    <input type="text" id="color_scheme" name="color_scheme" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="furniture">Furniture:</label>
+                    <input type="text" id="furniture" name="furniture" required>
+                </div>
+
+                <button type="submit" id="generateBtn">Generate Design</button>
+            </form>
+        </div>
+
+        <div class="results-container" id="resultsContainer" style="display: none;">
+            <h2>Generated Room Layout & Decoration</h2>
+            <div id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Generating design...</p>
+            </div>
+            <div id="results">
+            </div>
+            <!-- <button id="copyBtn">Copy to Clipboard</button> -->
+            <button id="downloadPdfBtn">Download as PDF</button>
+            <button onclick="window.print()">Print response</button>
+
+        </div>
+        <footer style="text-align: center; padding: 10px; background-color: #f8f9fa;">
+            © 2025 Powered by <strong>IVIS Labs</strong>
+        </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        document.getElementById("designForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const resultsContainer = document.getElementById("resultsContainer");
+            const loading = document.getElementById("loading");
+            const results = document.getElementById("results");
+
+            resultsContainer.style.display = "block";
+            loading.style.display = "block";
+            results.innerHTML = "";
+
+            try {
+                const response = await fetch("/generate_design", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                results.innerHTML = formatResponseWithMarkdown(data.design_recommendation);
+            } catch (error) {
+                results.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            } finally {
+                loading.style.display = "none";
+            }
+        });
+
+        // document.getElementById("copyBtn").addEventListener("click", () => {
+        //     const results = document.getElementById("results").innerText;
+        //     navigator.clipboard.writeText(results)
+        //         .then(() => {
+        //             const copyBtn = document.getElementById("copyBtn");
+        //             copyBtn.textContent = "Copied!";
+        //             setTimeout(() => {
+        //                 copyBtn.textContent = "Copy to Clipboard";
+        //             }, 2000);
+        //         })
+        //         .catch(err => {
+        //             console.error("Failed to copy: ", err);
+        //         });
+        // });
+
+        document.getElementById("downloadPdfBtn").addEventListener("click", () => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        let title = "Generated Interior Design Recommendations";
+        let content = document.getElementById("results").innerText;
+
+        doc.setFont("helvetica", "bold");
+        doc.text(title, 10, 10);
+        doc.setFont("helvetica", "normal");
+        doc.text(content, 10, 20, { maxWidth: 180 });
+
+        doc.save("Interior_Design_Recommendation.pdf");
+    });
+        function formatResponseWithMarkdown(text) {
+            let formatted = text.replace(/\n/g, '<br>');
+            formatted = formatted.replace(/#{1,6}\s+(.*?)(?:<br>|$)/g, '<h3>$1</h3>');
+            formatted = formatted.replace(/(\d+\.\s+)(.*?)(?:<br>|$)/g, '<div class="list-item"><span class="list-number">$1</span>$2</div>');
+            formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            return formatted;
+        }
+    </script>
+</body>
+</html>
